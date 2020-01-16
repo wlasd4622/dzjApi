@@ -2,6 +2,7 @@
 const Koa = require('koa');
 const axios = require('axios')
 const moment = require('moment')
+const fs = require('fs')
 // 创建koa的实例app
 const app = new Koa();
 
@@ -15,7 +16,6 @@ function getPhoneNumber(infoId = "") {
           reject(res.data)
         }
       }).catch(err => {
-        console.log(err);
         reject(err)
       })
     }, 500)
@@ -30,26 +30,39 @@ function getClientIP(req) {
 };
 
 app.use(async ctx => {
-  console.log('--------------------------------------------');
-  let result = {}
-  try {
-    console.log(`${moment().format('YYYY-MM-DD hh:mm:ss')} : ${ctx.request.query['info_id']}`);
-    let info = getClientIP(ctx.req)
-    console.log(`${moment().format('YYYY-MM-DD hh:mm:ss')} : ${info}`);
-    let infoId = parseInt(ctx.request.query['info_id'] || '')
-    if (infoId) {
-      try {
-        result = await getPhoneNumber(infoId)
-      } catch (err) {
-        result = err
-      }
-    }
-  } catch (err) {
-    console.log(err);
+  // 挂载日志模块
+  ctx.util = {
+    log: require('./utils/log')
   }
-  console.log(`${moment().format('YYYY-MM-DD hh:mm:ss')} : ${JSON.stringify(result)}`);
-  console.log('--------------------------------------------');
-  ctx.body = result
+
+  if (ctx.req.url.includes('/log')) {
+    result = fs.readFileSync('./logs/all-the-logs.log')
+    ctx.response.type = 'text/html';
+    console.log(result);
+    ctx.response.type = 'text/html';
+    ctx.response.body = `<div>${result.toString().replace(/\n/g,'</br>')}</dov>`;
+  } else {
+    let result = {}
+    ctx.util.log.info('--------------------------------------------');
+    try {
+      ctx.util.log.info(`${ctx.request.query['info_id']}`);
+      let info = getClientIP(ctx.req)
+      ctx.util.log.info(`${info}`);
+      let infoId = parseInt(ctx.request.query['info_id'] || '')
+      if (infoId) {
+        try {
+          result = await getPhoneNumber(infoId)
+        } catch (err) {
+          result = err
+        }
+      }
+    } catch (err) {
+      ctx.util.log.info(err);
+    }
+    ctx.util.log.info(`${JSON.stringify(result)}`);
+    ctx.util.log.info('--------------------------------------------');
+    ctx.body = result
+  }
 })
 
 // 监听端口
