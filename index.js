@@ -38,8 +38,6 @@ app.use(async ctx => {
   if (ctx.req.url.includes('/log')) {
     result = fs.readFileSync('./logs/all-the-logs.log')
     ctx.response.type = 'text/html';
-    console.log(result);
-    ctx.response.type = 'text/html';
     ctx.response.body = `<div>${result.toString().replace(/\n/g,'</br>')}</dov>`;
   } else {
     let result = {}
