@@ -1,11 +1,11 @@
 // 导入koa模块
 const Koa = require('koa');
 const axios = require('axios')
-
+const moment = require('moment')
 // 创建koa的实例app
 const app = new Koa();
 
-function getPhoneNumber(infoId) {
+function getPhoneNumber(infoId = "") {
   return new Promise((resolve, reject) => {
     axios.get('https://miniappfang.58.com/shop/api/virtualPhone?infoId=' + infoId).then(res => {
       if (res.data.code === 200) {
@@ -21,8 +21,8 @@ function getPhoneNumber(infoId) {
 }
 
 app.use(async ctx => {
-  console.log(ctx.request.query['info_id']);
   let infoId = parseInt(ctx.request.query['info_id'] || '')
+  console.log(`${moment().format('YYYY-MM-DD hh:mm:ss')} : ${infoId}`);
   let result = {}
   if (infoId) {
     try {
@@ -38,3 +38,5 @@ app.use(async ctx => {
 app.listen(3000, () => {
   console.log("服务器已启动，http://localhost:3000");
 })
+
+

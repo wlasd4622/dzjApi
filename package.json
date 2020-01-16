@@ -14,7 +14,8 @@
     "koa": "^2.11.0",
     "koa-compose": "^4.1.0",
     "koa-router": "^7.4.0",
-    "koa-simple-router": "^0.2.0"
+    "koa-simple-router": "^0.2.0",
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "memory-fs": "^0.5.0"
