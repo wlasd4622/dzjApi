@@ -30,16 +30,15 @@ function getClientIP(req) {
 };
 
 app.use(async ctx => {
-  // 挂载日志模块
-  ctx.util = {
-    log: require('./utils/log')
-  }
-
   if (ctx.req.url.includes('/log')) {
     result = fs.readFileSync('./logs/all-the-logs.log')
     ctx.response.type = 'text/html';
-    ctx.response.body = `<div>${result.toString().replace(/\n/g,'</br>')}</dov>`;
+    ctx.response.body = `<div>${result.toString().replace(/\n/g, '</br>')}</dov>`;
   } else {
+    // 挂载日志模块
+    ctx.util = {
+      log: require('./utils/log')
+    }
     let result = {}
     ctx.util.log.info('--------------------------------------------');
     try {
