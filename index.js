@@ -21,15 +21,19 @@ function getPhoneNumber(infoId = "") {
 }
 
 app.use(async ctx => {
-  let infoId = parseInt(ctx.request.query['info_id'] || '')
-  console.log(`${moment().format('YYYY-MM-DD hh:mm:ss')} : ${infoId}`);
   let result = {}
-  if (infoId) {
-    try {
-      result = await getPhoneNumber(infoId)
-    } catch (err) {
-      result = err
+  try {
+    console.log(`${moment().format('YYYY-MM-DD hh:mm:ss')} : ${ctx.request.query['info_id']}`);
+    let infoId = parseInt(ctx.request.query['info_id'] || '')
+    if (infoId) {
+      try {
+        result = await getPhoneNumber(infoId)
+      } catch (err) {
+        result = err
+      }
     }
+  } catch (err) {
+    console.log(err);
   }
   ctx.body = result
 })
