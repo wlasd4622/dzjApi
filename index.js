@@ -18,7 +18,7 @@ function getPhoneNumber(infoId = "") {
       }).catch(err => {
         reject(err)
       })
-    }, 500)
+    }, parseInt(Math.random() * 30 + 10) * 1000)
   })
 }
 
