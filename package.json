@@ -16,7 +16,7 @@
     "koa-compose": "^4.1.0",
     "koa-router": "^7.4.0",
     "koa-simple-router": "^0.2.0",
-    "log4js": "^6.1.0",
+    "log4js": "^6.4.0",
     "moment": "^2.24.0"
   },
   "devDependencies": {
